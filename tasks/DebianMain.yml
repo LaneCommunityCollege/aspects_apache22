@@ -1,0 +1,77 @@
+---
+# Run tasks on Debian style systems.
+
+# Enable modules
+- name: Add Apache 2.2 Module conf file links
+  when: item.value.Debian is defined and item.value.Debian.enable == True
+  file:
+    state="link"
+    path="/etc/apache2/mods-enabled/{{ item.value.Debian.links.conffile }}"
+    src="/etc/apache2/mods-available/{{ item.value.Debian.links.conffile }}"
+  with_dict: aspects_apache22_mods
+  notify: restart apache2
+  tags:
+  - aspects_apache22
+  - aspects_apache22_mods
+
+- name: Add Apache 2.2 Module load file links
+  when: item.value.Debian is defined and item.value.Debian.enable == True
+  file:
+    state="link"
+    path="/etc/apache2/mods-enabled/{{ item.value.Debian.links.loadfile }}"
+    src="/etc/apache2/mods-available/{{ item.value.Debian.links.loadfile }}"
+  with_dict: aspects_apache22_mods
+  notify: restart apache2
+  tags:
+  - aspects_apache22
+  - aspects_apache22_mods
+
+# Disable modules
+- name: Remove Apache 2.2 Module conf file links
+  when: item.value.Debian is defined and item.value.Debian.enable == False
+  file:
+    state="absent"
+    path="/etc/apache2/sites-enabled/{{ item.value.Debian.links.conffile }}"
+  with_dict: aspects_apache22_mods
+  notify: restart apache2
+  tags:
+  - aspects_apache22
+  - aspects_apache22_mods
+
+- name: Remove Apache 2.2 Module load file links
+  when: item.value.Debian is defined and item.value.Debian.enable == False
+  file:
+    state="absent"
+    path="/etc/apache2/sites-enabled/{{ item.value.Debian.links.loadfile }}"
+  with_dict: aspects_apache22_mods
+  notify: restart apache2
+  tags:
+  - aspects_apache22
+  - aspects_apache22_mods
+
+# Disable default vhosts
+- name: Remove Apache 2.2 vhost links
+  when: item.value.Debian is defined and item.value.Debian.enable == False
+  file:
+    state="absent"
+    path="/etc/apache2/sites-enabled/{{ item.value.Debian.file }}"
+  with_dict: aspects_apache22_default_vhosts
+  notify: restart apache2
+  tags:
+  - aspects_apache22
+  - aspects_apache22_defaul_vhosts
+
+# Set httpd.conf template
+# httpd.conf contains all overrides for apache settings.
+# It also containst module config, and vhost config.
+- name: Set httpd.conf template
+  template:
+    src="Debian-httpd.conf.j2"
+    dest="/etc/apache2/httpd.conf"
+    mode=644
+    owner=0
+    group=0
+  notify: restart apache2
+  tags:
+  - aspects_apache22
+  - aspects_apache22_httpdconf

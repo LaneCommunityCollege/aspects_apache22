@@ -1,0 +1,6 @@
+---
+# only init when aspects_apache22_enabled == true.
+- include: init.yml
+  when: aspects_apache22_enabled == true
+  tags:
+  - aspects_apache22

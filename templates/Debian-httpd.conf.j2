@@ -1,0 +1,11 @@
+# {{ ansible_managed }}
+
+
+{% for block in aspects_apache22_httpdconf|sort %}
+{{ aspects_apache22_httpdconf[block] }}
+{% endfor %}
+
+
+{% for vhost in aspects_apache22_vhosts|sort %}
+{{ aspects_apache22_vhosts[vhost] }}
+{% endfor %}
