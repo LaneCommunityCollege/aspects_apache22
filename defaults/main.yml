@@ -1,12 +1,18 @@
 ---
 # defaults file for aspects_apache22
+
+# Disable this role by default.
 aspects_apache22_enabled: false
+
+# The only package that should be installed by default is
+# the main apache 2.2 package.
+# TODO: Check that differences and similarities between Debian and RedHat are fully accounted for.
 aspects_apache22_packages:
   apache2mpmworker:
     state: "default"
     Debian: "apache2-mpm-worker"
   apache2:
-    state: "latest"
+    state: "present"
     Debian: "apache2"
     RedHat: "httpd"
   apache2mpmevent:
@@ -49,32 +55,23 @@ aspects_apache22_packages:
     status: "default"
     Debian: "apache2.2-common"
   modauthmysql:
-    state: "latest"
+    state: "default"
     RedHat: "mod_auth_mysql"
   modauthpgsql:
-    state: "latest"
+    state: "default"
     RedHat: "mod_auth_pgsql"
   modauthzldap:
-    state: "latest"
+    state: "default"
     RedHat: "mod_authz_ldap"
   moddavsvn:
-    state: "latest"
+    state: "default"
     RedHat: "mod_dav_svn"
-  moddnssd:
-    state: "latest"
-    RedHat: "mod_dnssd"
-  modnss:
-    state: "latest"
-    RedHat: "mod_nss"
   modperl:
-    state: "latest"
+    state: "default"
     RedHat: "mod_perl"
   modssl:
-    state: "latest"
+    state: "default"
     RedHat: "mod_ssl"
-  modwsgi:
-    state: "latest"
-    RedHat: "mod_wsgi"
   authcassimpleperl:
     state: "default"
     Debian: "libapache2-authcassimple-perl"
@@ -96,6 +93,7 @@ aspects_apache22_packages:
   modauthkerb:
     state: "default"
     Debian: "libapache2-mod-auth-kerb"
+    RedHat: "mod_auth_kerb"
   modauthmysql:
     state: "default"
     Debian: "libapache2-mod-auth-mysql"
@@ -147,6 +145,7 @@ aspects_apache22_packages:
   moddnssd:
     state: "default"
     Debian: "libapache2-mod-dnssd"
+    RedHat: "mod_dnssd"
   modencoding:
     state: "default"
     Debian: "libapache2-mod-encoding"
@@ -213,6 +212,7 @@ aspects_apache22_packages:
   modnss:
     state: "default"
     Debian: "libapache2-mod-nss"
+    RedHat: "mod_nss"
   modocamlnet:
     state: "default"
     Debian: "libapache2-mod-ocamlnet"
@@ -228,6 +228,7 @@ aspects_apache22_packages:
   modperl2dev:
     state: "default"
     Debian: "libapache2-mod-perl2-dev"
+    RedHat: "mod_perl-devel"
   modperl2doc:
     state: "default"
     Debian: "libapache2-mod-perl2-doc"
@@ -294,6 +295,9 @@ aspects_apache22_packages:
   moduwsgi:
     state: "default"
     Debian: "libapache2-mod-uwsgi"
+  modwsgi:
+    state: "default"
+    RedHat: "mod_wsgi"
   moduwsgidbg:
     state: "default"
     Debian: "libapache2-mod-uwsgi-dbg"
@@ -301,6 +305,8 @@ aspects_apache22_packages:
     state: "default"
     Debian: "libapache2-mod-vhost-hash-alias"
 
+# Enabling the default vhosts is not really a good idea.
+# This currently only works on Ubuntu.
 aspects_apache22_default_vhosts:
   default:
     Debian:
@@ -310,26 +316,54 @@ aspects_apache22_default_vhosts:
     Debian:
       enable: False
       file: "default-ssl"
+# Ubuntu is consistent where it places the LoadModule lines and .conf files.
+# Thus, you just need to specifiy the names of the appropriate files.
+# CentOS is less consistent. Most LoadModule lines are in httpd.conf.
+# Some are not, thus the need to specify which file to look modify.
+aspects_apache22_mods: {}
+#  modssl:
+#    Debian:
+#      enable: True
+#      links:
+#        conffile: "ssl.conf"
+#        loadfile: "ssl.load"
+#    RedHat:
+#      enable: True
+#      targetfile: "/etc/httpd/conf.d/ssl.conf"
+#      loadmoduleline: "LoadModule rewrite_module modules/mod_rewrite.so"
+#  modrewrite:
+#    Debian:
+#      enable: True
+#      links:
+#        loadfile: "rewrite.load"
+#    RedHat:
+#      enable: True
+#      targetfile: "/etc/httpd/conf/httpd.conf"
+#      loadmoduleline: "LoadModule rewrite_module modules/mod_rewrite.so"
+#  modauthndbm:
+#    Debian:
+#      enable: False
+#      links:
+#        loadfile: "authn_dbm.load"
+#    RedHat:
+#      enable: False
+#      targetfile: "/etc/httpd/conf/httpd.conf"
+#      loadmoduleline: "LoadModule authn_dbm_module modules/mod_authn_dbm.so"
 
-aspects_apache22_mods:
-  modssl:
-    Debian:
-      enable: True
-      links:
-        conffile: "ssl.conf"
-        loadfile: "ssl.load"
-
+# The configuration set is loaded into the main apache config via an include line.
+# See the distributions default config file to find where that line is.
+# On RedHat, check for what order the conf.d files are loaded if you run into issues.
 aspects_apache22_httpdconf:
   0startconfig: |
     # Start Config
-  1defaultssl: |
-    # 1defaultssl config from aspects_apache22/defaults/main.yml
-    # CipherSuite set from https://community.qualys.com/blogs/securitylabs/2013/08/05/configuring-apache-nginx-and-openssl-for-forward-secrecy
-    <IfModule mod_ssl.c>
-      SSLProtocol All -SSLv2 -SSLv3
-      SSLHonorCipherOrder On
-      SSLCipherSuite EECDH+ECDSA+AESGCM:EECDH+aRSA+AESGCM:EECDH+ECDSA+SHA384:EECDH+ECDSA+SHA256:EECDH+aRSA+SHA384:EECDH+aRSA+SHA256:EECDH+aRSA+RC4:EECDH:EDH+aRSA:RC4:!aNULL:!eNULL:!LOW:!3DES:!MD5:!EXP:!PSK:!SRP:!DSS:+RC4:RC4
-    </IfModule>
+#  1defaultssl: |
+#    # 1defaultssl config from aspects_apache22/defaults/main.yml
+#    # CipherSuite set from https://community.qualys.com/blogs/securitylabs/2013/08/05/configuring-apache-nginx-and-openssl-for-forward-secrecy
+#    <IfModule mod_ssl.c>
+#      SSLProtocol All -SSLv2 -SSLv3
+#      SSLHonorCipherOrder On
+#      SSLCipherSuite EECDH+ECDSA+AESGCM:EECDH+aRSA+AESGCM:EECDH+ECDSA+SHA384:EECDH+ECDSA+SHA256:EECDH+aRSA+SHA384:EECDH+aRSA+SHA256:EECDH+aRSA+RC4:EECDH:EDH+aRSA:RC4:!aNULL:!eNULL:!LOW:!3DES:!MD5:!EXP:!PSK:!SRP:!DSS:+RC4:RC4
+#    </IfModule>
   9999999999999block: |
     # End config
 

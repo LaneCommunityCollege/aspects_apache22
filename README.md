@@ -62,6 +62,24 @@ See the files in defaults for examples of most variables. If any are not self ex
               require valid-user
             </VirtualHost>
 
+## Installing Modules
+* Find the correct module in ```aspects_apache22_packages```
+* Set ```state``` to ```latest``` or ```present```.
+
+    aspects_apache22_packages:
+      modulekey:
+        state: "latest"
+        
+If the module is not in ```aspects_apache22_packages``` already, or doesn't have a package name for your OS, just do something like:
+
+    aspects_apache22_packages:
+      modulekey:
+        state: "latest"
+        OS: "package name"
+        
+## Overriding values
+If you have a ```aspects_apache22_httpdconf``` section set in a group_vars file but you want to get rid of it, or modify it on an individual server, just find the key, and set in your host_vars file. That's why we use ```hash_behaviour=merge```.
+
 ##License
 
 MIT

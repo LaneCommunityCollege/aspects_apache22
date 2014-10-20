@@ -65,6 +65,9 @@ galaxy_info:
   #  - raring
   #  - saucy
   #  - trusty
+  - name: CentOS
+    versions:
+    - 6.5
   #- name: SLES
   #  versions:
   #  - all

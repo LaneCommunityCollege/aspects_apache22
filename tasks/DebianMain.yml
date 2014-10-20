@@ -3,7 +3,7 @@
 
 # Enable modules
 - name: Add Apache 2.2 Module conf file links
-  when: item.value.Debian is defined and item.value.Debian.enable == True
+  when: item.value.Debian is defined and item.value.Debian.enable == True and item.value.Debian.links.conffile is defined
   file:
     state="link"
     path="/etc/apache2/mods-enabled/{{ item.value.Debian.links.conffile }}"
@@ -15,7 +15,7 @@
   - aspects_apache22_mods
 
 - name: Add Apache 2.2 Module load file links
-  when: item.value.Debian is defined and item.value.Debian.enable == True
+  when: item.value.Debian is defined and item.value.Debian.enable == True and item.value.Debian.links.loadfile is defined
   file:
     state="link"
     path="/etc/apache2/mods-enabled/{{ item.value.Debian.links.loadfile }}"
@@ -28,7 +28,7 @@
 
 # Disable modules
 - name: Remove Apache 2.2 Module conf file links
-  when: item.value.Debian is defined and item.value.Debian.enable == False
+  when: item.value.Debian is defined and item.value.Debian.enable == False and item.value.Debian.links.conffile is defined
   file:
     state="absent"
     path="/etc/apache2/sites-enabled/{{ item.value.Debian.links.conffile }}"
@@ -39,7 +39,7 @@
   - aspects_apache22_mods
 
 - name: Remove Apache 2.2 Module load file links
-  when: item.value.Debian is defined and item.value.Debian.enable == False
+  when: item.value.Debian is defined and item.value.Debian.enable == False and item.value.Debian.links.loadfile is defined
   file:
     state="absent"
     path="/etc/apache2/sites-enabled/{{ item.value.Debian.links.loadfile }}"
@@ -66,7 +66,7 @@
 # It also containst module config, and vhost config.
 - name: Set httpd.conf template
   template:
-    src="Debian-httpd.conf.j2"
+    src="httpd.conf.j2"
     dest="/etc/apache2/httpd.conf"
     mode=644
     owner=0
