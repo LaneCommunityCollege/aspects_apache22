@@ -311,7 +311,7 @@ aspects_apache22_default_vhosts:
   default:
     Debian:
       enable: False
-      file: "default"
+      file: "000-default"
   defaultssl:
     Debian:
       enable: False
