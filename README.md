@@ -19,6 +19,7 @@ See the files in defaults for examples of most variables. If any are not self ex
 * ```aspects_apache22_mods```: Dictionary of modules that you wish to enable or disable. Remember to ensure the correct package is installed before you try to use them.
 * ```aspects_apache22_httpdconf```: Blocks of apache configuration. Use this to modify the defaults set by the distribution. These are sorted by key. Override blocks by setting the key value to "".
 * ```aspects_apache22_vhosts```: Blocks of apache vhost configuration. Use this to add new vhosts. These are sorted by key. Override blocks by setting the key value to "".
+* ```aspects_apache22_disabled_directives```: When you disable some modules, like autoindex, configuration directives might be left behind in files created by the OS's packages, resulting in invalid Apache configuration. Use this dictionary to define what directives should be removed, and which files to remove them from.
 
 ##Example Playbook
 

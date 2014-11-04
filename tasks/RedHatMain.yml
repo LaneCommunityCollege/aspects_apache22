@@ -27,13 +27,27 @@
   - aspects_apache22
   - aspects_apache22_httpdconf
 
-# Set httpd.conf template
+# Remove /etc/httpd/conf/httpd.conf directives from disabled modules.
+- name: Remove disabled directives
+  when: item.value.targetfile.RedHat is defined
+  lineinfile:
+    state="absent"
+    regexp="{{ item.value.directive }}"
+    dest="{{ item.value.targetfile.RedHat }}"
+  with_dict: aspects_apache22_disabled_directives
+  notify: restart httpd
+  tags:
+  - aspects_apache22
+  - aspects_apache22_httpdconf
+  - asdfasdfasdf
+
+# Set custom conf template
 # This file contains all the overrides for apache settings
 # set in the aspects_apache22_httpdconf variable.
 # It also contains module and vhost config from aspects_apache22_vhosts.
 # Named the dest file 9999custom.conf in an effort to make sure it loads
 # last, so that it overrides any previous configuration. Need to test this...
-- name: RedHat - Set httpd.conf template
+- name: RedHat - Set custom conf template
   template:
     src="httpd.conf.j2"
     dest="/etc/httpd/conf.d/zzzzzCustomHttpd.conf"

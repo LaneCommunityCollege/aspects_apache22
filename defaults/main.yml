@@ -474,3 +474,13 @@ aspects_apache22_vhosts:
 #    </IfModule>
   9999999999999vhost: |
     # End Virtual Hosts
+
+aspects_apache22_disabled_directives: {}
+#  IndexOptions:
+#    directive: 'IndexOptions'
+#    targetfile:
+#      RedHat: '/etc/httpd/conf/httpd.conf'
+#  AddIconByEncoding:
+#    directive: 'AddIconByEncoding'
+#    targetfile:
+#      RedHat: '/etc/httpd/conf/httpd.conf'
