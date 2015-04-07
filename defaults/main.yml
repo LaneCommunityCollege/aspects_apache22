@@ -2,7 +2,7 @@
 # defaults file for aspects_apache22
 
 # Disable this role by default.
-aspects_apache22_enabled: false
+aspects_apache22_enabled: False
 
 # The only package that should be installed by default is
 # the main apache 2.2 package.
