@@ -57,8 +57,10 @@ aspects_apache22_packages:
   modauthmysql:
     state: "default"
     RedHat: "mod_auth_mysql"
+    Debian: "libapache2-mod-auth-mysql"
   modauthpgsql:
     state: "default"
+    Debian: "libapache2-mod-auth-pgsql"
     RedHat: "mod_auth_pgsql"
   modauthzldap:
     state: "default"
@@ -94,9 +96,6 @@ aspects_apache22_packages:
     state: "default"
     Debian: "libapache2-mod-auth-kerb"
     RedHat: "mod_auth_kerb"
-  modauthmysql:
-    state: "default"
-    Debian: "libapache2-mod-auth-mysql"
   modauthntlmwinbind:
     state: "default"
     Debian: "libapache2-mod-auth-ntlm-winbind"
@@ -106,9 +105,6 @@ aspects_apache22_packages:
   modauthpam:
     state: "default"
     Debian: "libapache2-mod-auth-pam"
-  modauthpgsql:
-    state: "default"
-    Debian: "libapache2-mod-auth-pgsql"
   modauthplain:
     state: "default"
     Debian: "libapache2-mod-auth-plain"

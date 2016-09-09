@@ -5,10 +5,10 @@
 - name: RedHat - Enable modules
   when: item.value.RedHat is defined and item.value.RedHat.enable == True
   lineinfile:
-    state="present"
-    line="{{ item.value.RedHat.loadmoduleline }}"
-    dest="{{ item.value.RedHat.targetfile }}"
-  with_dict: aspects_apache22_mods
+    state: "present"
+    line: "{{ item.value.RedHat.loadmoduleline }}"
+    dest: "{{ item.value.RedHat.targetfile }}"
+  with_dict: "{{ aspects_apache22_mods }}"
   notify: restart httpd
   tags:
   - aspects_apache22
@@ -18,10 +18,10 @@
 - name: RedHat - Disable modules
   when: item.value.RedHat is defined and item.value.RedHat.enable == False
   lineinfile:
-    state="absent"
-    line="{{ item.value.RedHat.loadmoduleline }}"
-    dest="{{ item.value.RedHat.targetfile }}"
-  with_dict: aspects_apache22_mods
+    state: "absent"
+    line: "{{ item.value.RedHat.loadmoduleline }}"
+    dest: "{{ item.value.RedHat.targetfile }}"
+  with_dict: "{{ aspects_apache22_mods }}"
   notify: restart httpd
   tags:
   - aspects_apache22
@@ -31,10 +31,10 @@
 - name: Remove disabled directives
   when: item.value.targetfile.RedHat is defined
   lineinfile:
-    state="absent"
-    regexp="{{ item.value.directive }}"
-    dest="{{ item.value.targetfile.RedHat }}"
-  with_dict: aspects_apache22_disabled_directives
+    state: "absent"
+    regexp: "{{ item.value.directive }}"
+    dest: "{{ item.value.targetfile.RedHat }}"
+  with_dict: "{{ aspects_apache22_disabled_directives }}"
   notify: restart httpd
   tags:
   - aspects_apache22
@@ -49,11 +49,11 @@
 # last, so that it overrides any previous configuration. Need to test this...
 - name: RedHat - Set custom conf template
   template:
-    src="httpd.conf.j2"
-    dest="/etc/httpd/conf.d/zzzzzCustomHttpd.conf"
-    mode=644
-    owner=0
-    group=0
+    src: "httpd.conf.j2"
+    dest: "/etc/httpd/conf.d/zzzzzCustomHttpd.conf"
+    mode: 644
+    owner: 0
+    group: 0
   notify: restart httpd
   tags:
   - aspects_apache22

@@ -3,24 +3,28 @@
 
 # Enable modules
 - name: Add Apache 2.2 Module conf file links
-  when: item.value.Debian is defined and item.value.Debian.enable == True and item.value.Debian.links.conffile is defined
+  when: item.value.Debian is defined and
+        item.value.Debian.enable == True and
+        item.value.Debian.links.conffile is defined
   file:
-    state="link"
-    path="/etc/apache2/mods-enabled/{{ item.value.Debian.links.conffile }}"
-    src="/etc/apache2/mods-available/{{ item.value.Debian.links.conffile }}"
-  with_dict: aspects_apache22_mods
+    state: "link"
+    path: "/etc/apache2/mods-enabled/{{ item.value.Debian.links.conffile }}"
+    src: "/etc/apache2/mods-available/{{ item.value.Debian.links.conffile }}"
+  with_dict: "{{ aspects_apache22_mods }}"
   notify: restart apache2
   tags:
   - aspects_apache22
   - aspects_apache22_mods
 
 - name: Add Apache 2.2 Module load file links
-  when: item.value.Debian is defined and item.value.Debian.enable == True and item.value.Debian.links.loadfile is defined
+  when: item.value.Debian is defined and
+        item.value.Debian.enable == True and
+        item.value.Debian.links.loadfile is defined
   file:
-    state="link"
-    path="/etc/apache2/mods-enabled/{{ item.value.Debian.links.loadfile }}"
-    src="/etc/apache2/mods-available/{{ item.value.Debian.links.loadfile }}"
-  with_dict: aspects_apache22_mods
+    state: "link"
+    path: "/etc/apache2/mods-enabled/{{ item.value.Debian.links.loadfile }}"
+    src: "/etc/apache2/mods-available/{{ item.value.Debian.links.loadfile }}"
+  with_dict: "{{ aspects_apache22_mods }}"
   notify: restart apache2
   tags:
   - aspects_apache22
@@ -28,22 +32,26 @@
 
 # Disable modules
 - name: Remove Apache 2.2 Module conf file links
-  when: item.value.Debian is defined and item.value.Debian.enable == False and item.value.Debian.links.conffile is defined
+  when: item.value.Debian is defined and
+        item.value.Debian.enable == False and
+        item.value.Debian.links.conffile is defined
   file:
-    state="absent"
-    path="/etc/apache2/sites-enabled/{{ item.value.Debian.links.conffile }}"
-  with_dict: aspects_apache22_mods
+    state: "absent"
+    path: "/etc/apache2/sites-enabled/{{ item.value.Debian.links.conffile }}"
+  with_dict: "{{ aspects_apache22_mods }}"
   notify: restart apache2
   tags:
   - aspects_apache22
   - aspects_apache22_mods
 
 - name: Remove Apache 2.2 Module load file links
-  when: item.value.Debian is defined and item.value.Debian.enable == False and item.value.Debian.links.loadfile is defined
+  when: item.value.Debian is defined and
+        item.value.Debian.enable == False and
+        item.value.Debian.links.loadfile is defined
   file:
-    state="absent"
-    path="/etc/apache2/sites-enabled/{{ item.value.Debian.links.loadfile }}"
-  with_dict: aspects_apache22_mods
+    state: "absent"
+    path: "/etc/apache2/sites-enabled/{{ item.value.Debian.links.loadfile }}"
+  with_dict: "{{ aspects_apache22_mods }}"
   notify: restart apache2
   tags:
   - aspects_apache22
@@ -53,9 +61,9 @@
 - name: Remove Apache 2.2 vhost links
   when: item.value.Debian is defined and item.value.Debian.enable == False
   file:
-    state="absent"
-    path="/etc/apache2/sites-enabled/{{ item.value.Debian.file }}"
-  with_dict: aspects_apache22_default_vhosts
+    state: "absent"
+    path: "/etc/apache2/sites-enabled/{{ item.value.Debian.file }}"
+  with_dict: "{{ aspects_apache22_default_vhosts }}"
   notify: restart apache2
   tags:
   - aspects_apache22
@@ -66,11 +74,11 @@
 # It also containst module config, and vhost config.
 - name: Set httpd.conf template
   template:
-    src="httpd.conf.j2"
-    dest="/etc/apache2/conf.d/zzzzzCustomHttpd.conf"
-    mode=644
-    owner=0
-    group=0
+    src: "httpd.conf.j2"
+    dest: "/etc/apache2/conf.d/zzzzzCustomHttpd.conf"
+    mode: 644
+    owner: 0
+    group: 0
   notify: restart apache2
   tags:
   - aspects_apache22

@@ -4,6 +4,7 @@
 - include: installPackages.yml
   tags:
   - aspects_apache22
+  - aspects_apache22_package_install
 
 - include: DebianMain.yml
   when:
